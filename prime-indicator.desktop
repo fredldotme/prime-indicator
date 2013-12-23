@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Exec=/usr/bin/prime-indicator
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=PRIME Indicator
+Comment=Simple indicator applet to switch between graphics cards on NVIDIA/Intel hybrid systems

@@ -1,0 +1,109 @@
+#!/usr/bin/env python
+# PRIME Indicator - indicator applet for NVIDIA Optimus laptops
+# Copyright (C) 2013 Alfred Neumayer
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+
+import gtk
+import appindicator
+import os
+import commands
+import gtk
+import sys
+
+class PRIMEIndicator:
+    def __init__(self):
+	self.ind = appindicator.Indicator("PRIME Indicator",
+                                           "indicator-messages",
+                                           appindicator.CATEGORY_APPLICATION_STATUS)
+	self.ind.set_status(appindicator.STATUS_ACTIVE)
+	self.ind.set_attention_icon("indicator-messages-new")
+	self.ind.set_icon_theme_path("/usr/lib/primeindicator/")
+	self.isIntegrated = self.checkIntegrated()
+	self.ind.set_icon('intel')
+	if not self.isIntegrated:
+	    self.ind.set_icon('nvidia')
+	self.menu_setup()
+        self.ind.set_menu(self.menu)
+
+    def menu_setup(self):
+        self.menu = gtk.Menu()
+	self.info_item = gtk.MenuItem(self.rendererString())
+	self.info_item.set_sensitive(False)
+	self.info_item.show()
+	self.seperator_item = gtk.SeparatorMenuItem()
+	self.seperator_item.show()
+	self.switch_item = gtk.MenuItem("Quick switch graphics ...")
+	self.switch_item.connect("activate", self.switch)
+	self.switch_item.show()
+	self.seperator2_item = gtk.SeparatorMenuItem()
+	self.seperator2_item.show()
+	self.settings_item = gtk.MenuItem("Open NVIDIA Settings")
+        self.settings_item.connect("activate", self.opensettings)
+        self.settings_item.show()
+	self.menu.append(self.info_item)
+	self.menu.append(self.seperator_item)
+	self.menu.append(self.switch_item)
+	self.menu.append(self.seperator2_item)
+	self.menu.append(self.settings_item)
+
+    def switch(self, dude):
+	self.showRebootDialog()
+	if self.isIntegrated:
+	    self.switchToDiscrete()
+	else:
+	    self.switchToIntegrated()
+	
+
+    def opensettings(self, dude):
+	os.system("/usr/bin/nvidia-settings")
+
+    def showRebootDialog(self):
+	message = "The X server will restart now."
+	dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO,
+                                       gtk.BUTTONS_NONE, message)
+	dialog.set_deletable(False)
+	dialog.connect('delete_event', self.ignore)
+	dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+	response = dialog.run()
+	dialog.destroy()
+
+    def ignore(*args):
+	return gtk.TRUE
+
+    def checkIntegrated(self):
+	stat, out = commands.getstatusoutput("/usr/bin/prime-select query")
+	if "intel" in out:
+	    return True
+	else:
+	    return False
+
+    def rendererString(self):
+	stat, out = commands.getstatusoutput('glxinfo | grep "OpenGL renderer string"')
+	out = out.replace("OpenGL renderer string", "Using")
+	return out
+
+    def switchToIntegrated(self):
+	os.system("sudo /usr/lib/primeindicator/igpuon")
+
+    def switchToDiscrete(self):
+	os.system("sudo /usr/lib/primeindicator/dgpuon")
+
+    def main(self):
+        gtk.main()
+
+if __name__ == "__main__":
+    indicator = PRIMEIndicator()
+    indicator.main()
