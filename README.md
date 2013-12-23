@@ -23,4 +23,5 @@ How to install
 ==============
 
 chmod a+x setup.sh
+
 sudo ./setup.sh
