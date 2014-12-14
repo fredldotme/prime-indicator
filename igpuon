@@ -18,4 +18,3 @@
 
 prime-select intel
 sync
-service lightdm restart
