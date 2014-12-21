@@ -65,13 +65,13 @@ class PRIMEIndicator:
 	    self.switchToDiscrete()
 	else:
 	    self.switchToIntegrated()
-	
+	self.logout()
 
     def opensettings(self, dude):
 	os.system("/usr/bin/nvidia-settings")
 
     def showRebootDialog(self):
-	message = "The X server will restart now."
+	message = "You will be logouted now."
 	dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO,
                                        gtk.BUTTONS_NONE, message)
 	dialog.set_deletable(False)
@@ -100,6 +100,9 @@ class PRIMEIndicator:
 
     def switchToDiscrete(self):
 	os.system("sudo /usr/lib/primeindicator/dgpuon")
+
+    def logout(self):
+        os.system('gnome-session-quit --logout --no-prompt')
 
     def main(self):
         gtk.main()

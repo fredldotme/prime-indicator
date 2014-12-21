@@ -18,4 +18,3 @@
 
 prime-select nvidia
 sync
-service lightdm restart
