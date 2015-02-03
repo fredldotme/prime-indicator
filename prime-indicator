@@ -71,7 +71,7 @@ class PRIMEIndicator:
 	os.system("/usr/bin/nvidia-settings")
 
     def showRebootDialog(self):
-	message = "You will be logouted now."
+	message = "You will be logged out now."
 	dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO,
                                        gtk.BUTTONS_NONE, message)
 	dialog.set_deletable(False)
