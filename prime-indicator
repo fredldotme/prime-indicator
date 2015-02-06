@@ -60,25 +60,28 @@ class PRIMEIndicator:
 	self.menu.append(self.settings_item)
 
     def switch(self, dude):
-	self.showRebootDialog()
-	if self.isIntegrated:
-	    self.switchToDiscrete()
-	else:
-	    self.switchToIntegrated()
-	self.logout()
+	response = self.showRebootDialog()
+	if response != gtk.RESPONSE_CANCEL:
+	  if self.isIntegrated:
+	      self.switchToDiscrete()
+	  else:
+	      self.switchToIntegrated()
+	  self.logout()
 
     def opensettings(self, dude):
 	os.system("/usr/bin/nvidia-settings")
 
     def showRebootDialog(self):
-	message = "You will be logouted now."
+	message = "You will be logged out now."
 	dialog = gtk.MessageDialog(None, gtk.DIALOG_MODAL, gtk.MESSAGE_INFO,
                                        gtk.BUTTONS_NONE, message)
 	dialog.set_deletable(False)
 	dialog.connect('delete_event', self.ignore)
 	dialog.add_button(gtk.STOCK_OK, gtk.RESPONSE_OK)
+	dialog.add_button(gtk.STOCK_CANCEL, gtk.RESPONSE_CANCEL)
 	response = dialog.run()
 	dialog.destroy()
+	return response
 
     def ignore(*args):
 	return gtk.TRUE
