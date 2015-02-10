@@ -14,9 +14,9 @@ Prerequisites
 You have to have a few packages installed on your Ubuntu box to take advantage of this indicator.
 Make sure you have the NVIDIA driver >=331.20 installed and the additional package called "nvidia-prime".
 In case the indicator doesn't start because it is missing the python module "appindicator",
-again, make sure to install missing packages. To install all needed dependencies:
+again, make sure to install missing packages. If the indicator contains a glxinfo error message, you are missing the mesa-utils package. To install all needed dependencies:
 
-sudo apt-get install nvidia-prime nvidia-331 nvidia-settings python-appindicator
+sudo apt-get install nvidia-prime nvidia-331 nvidia-settings python-appindicator mesa-utils
 
 
 How to install

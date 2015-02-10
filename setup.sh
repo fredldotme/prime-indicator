@@ -37,6 +37,13 @@ else
 	chmod 644 /etc/sudoers.d/prime-indicator-sudoers
 
 	read -n1 -p "Autostart PRIME Indicator? (y/N) "
-	echo
-	[[ $REPLY = [yY] ]] && cp prime-indicator.desktop $HOME/.config/autostart/ || { rm $HOME/.config/autostart/prime-indicator.desktop; }
+	echo $USER
+	if [[ $REPLY == [yY] ]]; then
+		mkdir -p $HOME/.config/autostart
+		cp prime-indicator.desktop $HOME/.config/autostart
+        chown $SUDO_USER:$SUDO_USER $HOME/.config/autostart
+        chown $SUDO_USER:$SUDO_USER $HOME/.config/autostart/prime-indicator.desktop
+	else
+		rm -f $HOME/.config/autostart/prime-indicator.desktop
+	fi
 fi
